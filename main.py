@@ -1,33 +1,30 @@
-from scipy.ndimage import uniform_filter
 from sklearn import datasets
-from sklearn.neural_network import MLPClassifier
-from sklearn.utils import shuffle
-from scipy.sparse import coo_matrix
+
+import visualization
+import feature_extr
+import MNIST_KNN, MNIST_MLP
+
+from sklearn.model_selection import train_test_split
 
 x, y = datasets.fetch_openml('mnist_784', version=1, return_X_y=True, parser='auto')
-x = x/255.0
+x = x / 255.0
 x = x.to_numpy()
 y = y.to_numpy()
-x_sparse = coo_matrix(x)
-x, x_sparse, y = shuffle(x, x_sparse, y, random_state=0)
-x_train, x_test, y_train, y_test = x[:60000], x[60000:], y[:60000], y[60000:]
 
-x_train = MaxPool()
-#uniform filter, pooling
+(x_train, x_test, y_train, y_test) = train_test_split(x, y, test_size=10000, random_state=84, shuffle=True)
+# uniform filter, pooling
+(x_train, x_val, y_train, y_val) = train_test_split(x_train, y_train, test_size=0.1, random_state=84)
+# Extract HOG features from the training data
 
-model = MLPClassifier(
-    hidden_layer_sizes=(60,),
-    max_iter=10,
-    alpha=1e-4,
-    solver="sgd",
-    verbose=10,
-    random_state=1,
-    learning_rate_init=0.2,
-)
+visualization.visualize_hog(x_train)
+visualization.visualize_maxpool(x_train)
 
-model.fit(x_train, y_train)
-print("Training set score: %f" % model.score(x_train, y_train))
-print("Test set score: %f" % model.score(x_test, y_test))
+kVals = range(1, 10, 1)
 
+hog_features_train, hog_features_test, hog_features_eval = feature_extr.hog_features_extr(x_train, x_test, x_val)
+x_train_pooled, x_test_pooled, x_val_pooled = feature_extr.mp_feature_extr(x_train, x_test, x_val)
 
-
+# MNIST_KNN.knn_hog(hog_features_train, y_train, hog_features_eval, y_val, hog_features_test, y_test, kVals)
+# MNIST_KNN.knn_mp(x_train_pooled, y_train, x_val_pooled, y_val, x_test_pooled, y_test, kVals)
+MNIST_MLP.mlp(hog_features_train, y_train, hog_features_eval, y_val, hog_features_test, y_test)
+MNIST_MLP.mlp(x_train_pooled, y_train, x_val_pooled, y_val, x_test_pooled, y_test)
