@@ -40,3 +40,15 @@ def visualize_maxpool(array):
     ax2.imshow(maxpool_image, cmap=plt.cm.gray)
     ax2.set_title('MaxPooling')
     plt.show()
+
+
+def visualize_wrong(predictions, y_test, array):
+    misclassified = np.where(predictions != y_test)[0]
+    print("Misclassified samples:")
+    for i in misclassified:
+        # print("Index:", i, "True label:", y_test[i], "Predicted label:", predictions[i])
+        image = array[i].reshape((28, 28, 1))
+
+        plt.imshow(image, cmap=plt.cm.gray, aspect='auto')
+        plt.title('Index:' + str(i) + ' Label:' + str(y_test[i]) + ' Predicted:' + str(predictions[i]))
+        plt.show()
