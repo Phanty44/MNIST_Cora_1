@@ -12,6 +12,7 @@ from torch_geometric.datasets import Planetoid
 from torch_geometric.utils.convert import to_networkx
 from torch_geometric.data import data, dataset, in_memory_dataset
 
+import visualization
 def knn(train_x, train_y, test_x, test_y, title):
     best_score = 0
     best_k = 1
@@ -30,7 +31,9 @@ def knn(train_x, train_y, test_x, test_y, title):
     knn = KNeighborsClassifier(best_k)
     knn.fit(train_x, train_y)
     knn_pred = knn.predict(test_x)
+    visualization.visualize_confusion_cora(test_y,knn_pred,knn)
     print(classification_report(test_y, knn_pred))
+
 
 def mlp(train_x, train_y, test_x, test_y, title):
     # layers = 50
@@ -74,6 +77,7 @@ def mlp(train_x, train_y, test_x, test_y, title):
 
     mlp.fit(train_x, train_y)
     mlp_pred = mlp.predict(test_x)
+    visualization.visualize_confusion_cora(test_y,mlp_pred,mlp)
     print(classification_report(test_y, mlp_pred))
 
 def svc(train_x, train_y, test_x, test_y, title):
@@ -98,6 +102,7 @@ def svc(train_x, train_y, test_x, test_y, title):
 
     svc.fit(train_x, train_y)
     svc_pred = svc.predict(test_x)
+    visualization.visualize_confusion_cora(test_y,svc_pred,svc)
     print(classification_report(test_y, svc_pred))
 
 cora = Planetoid(".", "Cora", "public")
