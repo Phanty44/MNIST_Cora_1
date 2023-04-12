@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
+
 
 import visualization
 
@@ -12,11 +13,11 @@ def knn(i, x_train, y_train, x_test, y_test, prime_dataset):
 
     # predict results for test dataset
     predictions = model.predict(x_test)
-
-    # show wrongly predicted data
-    visualization.visualize_wrong(predictions, y_test, prime_dataset)
-
     print(classification_report(y_test, predictions))
+
+    # visualization.visualize_confusion(y_test, predictions, model)
+    # Visualize wrongly predicted data
+    # visualization.visualize_wrong(predictions, y_test, prime_dataset)
 
 
 # loop over various values of `k` for the k-Nearest Neighbor classifier

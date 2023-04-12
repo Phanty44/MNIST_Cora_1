@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from skimage.feature import hog
 from skimage.measure import block_reduce
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 
 def visualize_hog(array):
@@ -37,7 +39,7 @@ def visualize_maxpool(array):
     ax1.set_title('Input image')
 
     ax2.axis('off')
-    ax2.imshow(maxpool_image, cmap=plt.cm.gray)
+    ax2.imshow(maxpool_image, cmap=plt.cm.gray, aspect='auto')
     ax2.set_title('MaxPooling')
     plt.show()
 
@@ -52,3 +54,14 @@ def visualize_wrong(predictions, y_test, array):
         plt.imshow(image, cmap=plt.cm.gray, aspect='auto')
         plt.title('Index:' + str(i) + ' Label:' + str(y_test[i]) + ' Predicted:' + str(predictions[i]))
         plt.show()
+
+
+def visualize_confusion(y_test, predictions, model):
+    cm = confusion_matrix(y_test, predictions, labels=model.classes_)
+
+    sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                yticklabels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.show()
