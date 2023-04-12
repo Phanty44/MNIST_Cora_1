@@ -65,3 +65,13 @@ def visualize_confusion(y_test, predictions, model):
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.show()
+
+def visualize_confusion_cora(y_test, predictions, model):
+    cm = confusion_matrix(y_test, predictions, labels=model.classes_)
+
+    sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=[0, 1, 2, 3, 4, 5, 6],
+                yticklabels=[0, 1, 2, 3, 4, 5, 6])
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.show()
